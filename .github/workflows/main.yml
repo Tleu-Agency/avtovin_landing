@@ -23,6 +23,8 @@ jobs:
             echo "Перехожу в директорию проекта"
             cd /var/www/LANDINGcarso || exit 1
             git remote set-url origin git@github.com:KAMAbee/LANDINGcarso.git
+            echo "Установка доверия к github.com"
+            ssh-keyscan github.com >> ~/.ssh/known_hosts
             git remote -v
             echo "Выполняю git pull..."
             git pull origin main
