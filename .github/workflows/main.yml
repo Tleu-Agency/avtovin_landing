@@ -22,6 +22,7 @@ jobs:
           script: |
             echo "Перехожу в директорию проекта"
             cd /var/www/LANDINGcarso || exit 1
+            git remote set-url origin git@github.com:KAMAbee/LANDINGcarso.git
             git remote -v
             echo "Выполняю git pull..."
             git pull origin main
