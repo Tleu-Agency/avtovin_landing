@@ -19,7 +19,14 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_SSH_PORT }}
-          script:
+          script: |
+            echo "Перехожу в директорию проекта"
             cd /var/www/LANDINGcarso || exit 1
+            echo "Выполняю git pull..."
             git pull origin main
+      
+            echo "Git pull завершён. Последний commit:"
+            git log -1
+            echo "Перезапуск NGINX..."
             sudo systemctl restart nginx
+            echo "Деплой завершён"
