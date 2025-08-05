@@ -99,7 +99,7 @@ html {
     height: 72px;
     width: 100%; }
     .header__top-logo {
-      height: 26px;
+      height: 40px;
       transition: transform 0.3s ease; }
       .header__top-logo:hover {
         transform: scale(1.02); }
@@ -242,7 +242,7 @@ html {
           top: 8px; } }
   @media (max-width: 600px) {
     .header .header__top-logo {
-      height: 24px; }
+      height: 36px; }
     .header .header__top-button {
       width: 110px;
       font-size: 13px;
@@ -251,7 +251,7 @@ html {
     .header .header__top {
       padding: 10px 0; }
     .header .header__top-logo {
-      height: 20px; }
+      height: 26px; }
     .header .header__top-button {
       width: 90px;
       font-size: 12px;
@@ -2939,7 +2939,7 @@ html {
         text-decoration: underline;
         color: #0954b7; }
     .footer__in-logo {
-      height: 32px; }
+      height: 40px; }
     .footer__in-privacy {
       color: #000;
       font-size: 12px;

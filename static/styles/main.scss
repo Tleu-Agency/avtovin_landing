@@ -126,7 +126,7 @@ html {
         width: 100%;
 
         &-logo {
-            height: 26px;
+            height: 40px;
             transition: transform 0.3s ease;
 
             &:hover {
@@ -331,7 +331,7 @@ html {
 
     @media (max-width: 600px) {
         .header__top-logo {
-            height: 24px;
+            height: 36px;
         }
 
         .header__top-button {
@@ -347,7 +347,7 @@ html {
         }
 
         .header__top-logo {
-            height: 20px;
+            height: 26px;
         }
 
         .header__top-button {
@@ -4226,7 +4226,7 @@ html {
         }
 
         &-logo {
-            height: 32px;
+            height: 40px;
         }
 
         &-privacy {
