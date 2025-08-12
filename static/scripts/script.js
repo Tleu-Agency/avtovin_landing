@@ -1,38 +1,3 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const commentsSwiper = new Swiper(".main__comments-in-posts", {
-    slidesPerView: 1,
-    spaceBetween: 100,
-    loop: true,
-    navigation: false,
-    autoplay: {
-      delay: 4000,
-      disableOnInteraction: false,
-    },
-    breakpoints: {
-      1000: { slidesPerView: 2 },
-    },
-  });
-
-  const commentNextBtn = document.querySelector(
-    ".main__comments-in .c-button-next"
-  );
-  const commentPrevBtn = document.querySelector(
-    ".main__comments-in .c-button-prev"
-  );
-
-  if (commentNextBtn) {
-    commentNextBtn.addEventListener("click", () => {
-      commentsSwiper.slideNext();
-    });
-  }
-
-  if (commentPrevBtn) {
-    commentPrevBtn.addEventListener("click", () => {
-      commentsSwiper.slidePrev();
-    });
-  }
-});
-
 document.addEventListener("DOMContentLoaded", () => {
   const elements = document.querySelectorAll(
     ".main__varanty-in-cards-item, .main__works-in-cards-item, .main__cars-in-cells-item, .main__shows-in-buttons-item, .main__connect-in-cards-item, .card-2, .main__tariffs-card, .main__tariffs-card-image, .main__tariffs-card-feature, .main__tariffs-card-specs, .main__tariffs-card-button"
