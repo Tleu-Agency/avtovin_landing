@@ -230,36 +230,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-  const categories = document.querySelectorAll(".main__coverage-category");
-  const descriptions = document.querySelectorAll(".main__coverage-description");
-  const images = document.querySelectorAll(".main__coverage-img");
-
-  categories.forEach((category) => {
-    category.addEventListener("click", function () {
-      const target = this.dataset.target;
-
-      categories.forEach((cat) => cat.classList.remove("active"));
-      this.classList.add("active");
-
-      descriptions.forEach((desc) => {
-        if (desc.dataset.category === target) {
-          desc.classList.add("active");
-        } else {
-          desc.classList.remove("active");
-        }
-      });
-
-      images.forEach((img) => {
-        if (img.dataset.category === target) {
-          img.classList.add("active");
-        } else {
-          img.classList.remove("active");
-        }
-      });
-    });
-  });
-});
 
 document.addEventListener("DOMContentLoaded", function () {
   const videoContainers = document.querySelectorAll(".video-container-wrapper");
