@@ -590,3 +590,112 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+  const CENTERS_API = "static/data/service-centers.json"; // локальный JSON
+  const container = document.querySelector(".main__cities-in-items");
+  if (!container) return;
+
+  const TYPE_MAP = {
+    CAR_SERVICE: { key: "cities.service", title: "Автосервисы" },
+    OIL_CHANGE: { key: "cities.oil", title: "Замена масла" },
+    HYBRID: { key: "cities.hybrid", title: "Для гибрид. и эл. авто" },
+  };
+  const TYPE_ORDER = ["CAR_SERVICE", "OIL_CHANGE", "HYBRID"];
+
+  initServiceCenters();
+
+  async function initServiceCenters() {
+    try {
+      container.innerHTML = "";
+
+      const resp = await fetch(CENTERS_API, { headers: { "Content-Type": "application/json" } });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const raw = await resp.json();
+
+      const items = (Array.isArray(raw) ? raw : []).map((x) => ({
+        address: (x.address || "").trim(),
+        socialLink: (x.socialLink || "").trim(),
+        type: String(x.type || "").trim(),   // ожидаем: HYBRID | OIL_CHANGE | CAR_SERVICE
+        city: (x.city || "Прочее").trim(),
+      })).filter(i => i.address && i.city && TYPE_MAP[i.type]);
+
+      // Группировка по городу и типу
+      const grouped = {};
+      for (const i of items) {
+        if (!grouped[i.city]) grouped[i.city] = {};
+        if (!grouped[i.city][i.type]) grouped[i.city][i.type] = [];
+        grouped[i.city][i.type].push(i);
+      }
+
+      // Сортировка городов: сначала приоритетные, затем по алфавиту (ru)
+      const PINNED_ORDER = { "астана": 0, "алматы": 1, "алмата": 1, "шымкент": 2 };
+      const cities = Object.keys(grouped).sort((a, b) => {
+        const al = a.toLowerCase();
+        const bl = b.toLowerCase();
+        const ai = Object.prototype.hasOwnProperty.call(PINNED_ORDER, al) ? PINNED_ORDER[al] : Infinity;
+        const bi = Object.prototype.hasOwnProperty.call(PINNED_ORDER, bl) ? PINNED_ORDER[bl] : Infinity;
+        if (ai !== bi) return ai - bi;
+        return a.localeCompare(b, "ru");
+      });
+
+      // Рендер
+      for (const city of cities) {
+        container.appendChild(buildCityItem(city, grouped[city]));
+      }
+    } catch (e) {
+      console.error("Не удалось загрузить автосервисы:", e);
+    }
+  }
+
+  function buildCityItem(city, groups) {
+    const item = document.createElement("div");
+    item.className = "main__cities-in-item";
+
+    const header = document.createElement("button");
+    header.className = "main__cities-in-item-header";
+    header.innerHTML = `${escapeHtml(city)} <span class="main__cities-in-item-header-arrow">▼</span>`;
+    item.appendChild(header);
+
+    const content = document.createElement("div");
+    content.className = "main__cities-in-item-content";
+
+    for (const t of TYPE_ORDER) {
+      const arr = (groups[t] || []).sort((a, b) => a.address.localeCompare(b.address, "ru"));
+      if (!arr.length) continue;
+
+      const wrap = document.createElement("div");
+      wrap.className = "main__cities-in-item-content-wrap";
+
+      const title = document.createElement("div");
+      title.className = "main__cities-in-item-content-title";
+      title.setAttribute("data-i18n", TYPE_MAP[t].key);
+      title.textContent = TYPE_MAP[t].title;
+      wrap.appendChild(title);
+
+      arr.forEach(({ address, socialLink }) => {
+        const p = document.createElement("p");
+        if (socialLink) {
+          const a = document.createElement("a");
+          a.href = socialLink;
+          a.target = "_blank";
+          a.rel = "noopener";
+          a.textContent = address;
+          p.appendChild(a);
+        } else {
+          p.textContent = address;
+        }
+        wrap.appendChild(p);
+      });
+
+      content.appendChild(wrap);
+    }
+
+    item.appendChild(content);
+    return item;
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+  }
+});
