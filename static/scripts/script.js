@@ -592,7 +592,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  const CENTERS_API = "static/data/service-centers.json"; // локальный JSON
+  const CENTERS_API = "static/data/service-centers.json";
   const container = document.querySelector(".main__cities-in-items");
   if (!container) return;
 
@@ -616,11 +616,10 @@ document.addEventListener("DOMContentLoaded", function () {
       const items = (Array.isArray(raw) ? raw : []).map((x) => ({
         address: (x.address || "").trim(),
         socialLink: (x.socialLink || "").trim(),
-        type: String(x.type || "").trim(),   // ожидаем: HYBRID | OIL_CHANGE | CAR_SERVICE
+        type: String(x.type || "").trim(),   // HYBRID | OIL_CHANGE | CAR_SERVICE
         city: (x.city || "Прочее").trim(),
       })).filter(i => i.address && i.city && TYPE_MAP[i.type]);
 
-      // Группировка по городу и типу
       const grouped = {};
       for (const i of items) {
         if (!grouped[i.city]) grouped[i.city] = {};
@@ -628,7 +627,6 @@ document.addEventListener("DOMContentLoaded", function () {
         grouped[i.city][i.type].push(i);
       }
 
-      // Сортировка городов: сначала приоритетные, затем по алфавиту (ru)
       const PINNED_ORDER = { "астана": 0, "алматы": 1, "алмата": 1, "шымкент": 2 };
       const cities = Object.keys(grouped).sort((a, b) => {
         const al = a.toLowerCase();
