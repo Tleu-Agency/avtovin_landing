@@ -916,6 +916,12 @@ html {
         }
     }
 
+    @media (max-width: 992px) {
+        .main__cars {
+            padding-bottom: 0px;
+        }
+    }
+
     &__cars {
         width: 100%;
         background-color: #FFF;
@@ -924,6 +930,7 @@ html {
         align-items: center;
         padding: 100px 0;
         height: auto;
+
 
 
         &-in {
@@ -1137,7 +1144,7 @@ html {
         justify-content: center;
         align-items: center;
         background-color: #fff;
-        padding: 70px 0;
+        padding: 80px 0;
 
         &-in {
             width: calc(100% - 40px);
@@ -1334,7 +1341,7 @@ html {
 
         @media (max-width: 480px) {
             padding: 0px;
-            padding-top: 40px;
+            padding-top: 80px;
 
             &-in {
                 &-title {
