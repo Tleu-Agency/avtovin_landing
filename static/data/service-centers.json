@@ -206,13 +206,13 @@
   {
     "city": "Шымкент",
     "type": "OIL_CHANGE",
-    "address": "Рыскулова, 23",
-    "socialLink": "https://go.2gis.com/3pD0R"
+    "address": "Тамерлановское шоссе, 20Б/3 ",
+    "socialLink": ""
   },
-  {
+   {
     "city": "Шымкент",
-    "type": "OIL_CHANGE",
-    "address": "Мадели Кожа, 157",
-    "socialLink": "https://go.2gis.com/x2rap"
+    "type": "CAR_SERVICE",
+    "address": "Тамерлановское шоссе, 20Б/3 ",
+    "socialLink": ""
   }
 ]
