@@ -150,6 +150,12 @@
     "socialLink": "https://2gis.kz/pavlodar/search/%D0%9F%D1%80.%20%D0%9D%D1%83%D1%80%D1%81%D1%83%D0%BB%D1%82%D0%B0%D0%BD%D0%B0%20%D0%9D%D0%B0%D0%B7%D0%B0%D1%80%D0%B1%D0%B0%D0%B5%D0%B2%D0%B0%2C%2056%2F1/firm/70000001040839480/76.968848%2C52.26666?m=76.968804%2C52.266645%2F17.31"
   },
   {
+    "city": "Павлодар",
+    "type": "OIL_CHANGE",
+    "address": "Циолковского, 31/6",
+    "socialLink": "https://2gis.kz/pavlodar/firm/70000001086984269"
+  },
+  {
     "city": "Петропавловск",
     "type": "CAR_SERVICE",
     "address": "Жумабаева, 34",
@@ -160,6 +166,12 @@
     "type": "OIL_CHANGE",
     "address": "Каржаубайулы, 241",
     "socialLink": "https://2gis.kz/semej/search/%D0%BA%D0%B0%D1%80%D0%B6%D0%B0%D1%83%D0%B1%D0%B0%D0%B9%D1%83%D0%BB%D1%8B%20241/firm/70000001091625764/80.263548%2C50.443289?m=80.264375%2C50.443204%2F18.38%2Fr%2F-7.95"
+  },
+  {
+    "city": "Семей",
+    "type": "OIL_CHANGE",
+    "address": "Кабылбаева, 29",
+    "socialLink": "https://2gis.kz/semej/firm/70000001091447029"
   },
   {
     "city": "Степногорск",
