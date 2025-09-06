@@ -673,15 +673,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
       arr.forEach(({ address, socialLink }) => {
         const p = document.createElement("p");
+        let htmlAddress = address;
+        const noteMatch = /\(Звонить по предварительной записи [^)]+\)/;
+        if (noteMatch.test(address)) {
+          htmlAddress = address.replace(noteMatch, (m) => `<span class="service-note">${m}</span>`);
+        }
         if (socialLink) {
           const a = document.createElement("a");
           a.href = socialLink;
           a.target = "_blank";
           a.rel = "noopener";
-          a.textContent = address;
+          a.innerHTML = htmlAddress;
           p.appendChild(a);
         } else {
-          p.textContent = address;
+          p.innerHTML = htmlAddress;
         }
         wrap.appendChild(p);
       });
