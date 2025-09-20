@@ -138,11 +138,13 @@
       "serverError": "Сервер қатесі. Кейінірек қайталап көріңіз.",
       "unknownError": "Белгісіз қате."
     },
-    "serviceCard": {
+     "serviceCard": {
       "type": "Түрі:",
       "description": "Сипаттама:",
       "mileage": "Жүріс:",
-      "serviceCenter": "СТО:"
+      "serviceCenter": "СТО:",
+      "date": "Күні:",
+      "address": "Мекенжайы:"
     }
   },
   "check": {

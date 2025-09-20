@@ -435,7 +435,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       try {
-        const apiUrl = `https://api.guarantee.carso.kz/cars/by-vin?vin=${encodeURIComponent(
+        const apiUrl = `https://api.accounting.avtovin.kz/cars/by-vin?vin=${encodeURIComponent(
           vin
         )}`;
 
@@ -455,6 +455,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         const data = await carResp.json();
+        console.log(data);
 
         const car = data;
         const warranty = car.warrantyPolicy || {};
@@ -464,26 +465,44 @@ document.addEventListener("DOMContentLoaded", function () {
         carModel.textContent = car.model || "-";
         carYear.textContent = car.year || "-";
 
-        warrantyStart.textContent = warranty.createdTime
-          ? new Date(warranty.createdTime).toLocaleDateString()
-          : "-";
-        warrantyEnd.textContent = warranty.endTime
-          ? new Date(warranty.endTime).toLocaleDateString()
-          : "-";
-        warrantyCoverage.textContent = warranty.maxMileage
-          ? `До ${warranty.maxMileage.toLocaleString()} км`
-          : "-";
-
-        if (warranty.endTime && new Date(warranty.endTime) > new Date()) {
+        // Проверяем активность гарантии
+        if (isWarrantyActive(warranty)) {
+          // Если гарантия активна, показываем все детали
           warrantyStatus.classList.add("active");
           warrantyStatus.classList.remove("inactive");
           warrantyStatus.querySelector("span").setAttribute("data-i18n", "vinCheck.results.warranty.active");
-          warrantyStatus.querySelector("span").textContent = window.getTranslation ? window.getTranslation("vinCheck.results.warranty.active") : "Гарантия активна";
+          warrantyStatus.querySelector("span").textContent = window.getTranslation 
+            ? window.getTranslation("vinCheck.results.warranty.active") 
+            : "Гарантия активна";
+          
+          // Показываем информацию о гарантии
+          document.getElementById("warranty-start").parentElement.style.display = "flex";
+          document.getElementById("warranty-end").parentElement.style.display = "flex";
+          document.getElementById("warranty-coverage").parentElement.style.display = "flex";
+          
+          // Заполняем данные
+          warrantyStart.textContent = warranty.startTime
+            ? new Date(warranty.startTime).toLocaleDateString()
+            : "-";
+          warrantyEnd.textContent = warranty.endTime
+            ? new Date(warranty.endTime).toLocaleDateString()
+            : "-";
+          warrantyCoverage.textContent = warranty.maxMileage
+            ? `До ${warranty.maxMileage.toLocaleString()} км`
+            : "-";
         } else {
+          // Если гарантия неактивна, скрываем детали
           warrantyStatus.classList.remove("active");
           warrantyStatus.classList.add("inactive");
           warrantyStatus.querySelector("span").setAttribute("data-i18n", "vinCheck.results.warranty.inactive");
-          warrantyStatus.querySelector("span").textContent = window.getTranslation ? window.getTranslation("vinCheck.results.warranty.inactive") : "Гарантия неактивна";
+          warrantyStatus.querySelector("span").textContent = window.getTranslation 
+            ? window.getTranslation("vinCheck.results.warranty.inactive") 
+            : "Гарантия неактивна";
+          
+          // Скрываем информацию о гарантии
+          document.getElementById("warranty-start").parentElement.style.display = "none";
+          document.getElementById("warranty-end").parentElement.style.display = "none";
+          document.getElementById("warranty-coverage").parentElement.style.display = "none";
         }
 
         const sliderWrapper = document.getElementById("service-slider");
@@ -499,13 +518,29 @@ document.addEventListener("DOMContentLoaded", function () {
             const slide = document.createElement("div");
             slide.className = "swiper-slide";
             
+            // Форматирование даты
+            let formattedDate = "-";
+            if (record.createdTime) {
+              const date = new Date(record.createdTime);
+              formattedDate = date.toLocaleDateString('ru-RU', {
+                day: '2-digit',
+                month: '2-digit', 
+                year: 'numeric'
+              });
+            }
+            
+            // Получение адреса СТО
+            const serviceAddress = record.serviceCenter?.address || "-";
+            
             const typeLabel = window.getTranslation ? window.getTranslation("vinCheck.serviceCard.type") : "Тип:";
+            const dateLabel = window.getTranslation ? window.getTranslation("vinCheck.serviceCard.date") : "Дата:";
             const descLabel = window.getTranslation ? window.getTranslation("vinCheck.serviceCard.description") : "Описание:";
             const mileageLabel = window.getTranslation ? window.getTranslation("vinCheck.serviceCard.mileage") : "Пробег:";
             const serviceCenterLabel = window.getTranslation ? window.getTranslation("vinCheck.serviceCard.serviceCenter") : "СТО:";
             
             slide.innerHTML = `
               <div class="service-card">
+                <div><span class="label" data-i18n="vinCheck.serviceCard.date">${dateLabel}</span> <span class="value">${formattedDate}</span></div>
                 <div><span class="label" data-i18n="vinCheck.serviceCard.type">${typeLabel}</span> <span class="value">${
                   record.serviceType || "-"
                 }</span></div>
@@ -514,10 +549,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 }</span></div>
                 <div><span class="label" data-i18n="vinCheck.serviceCard.mileage">${mileageLabel}</span> <span class="value">${
                   record.mileage?.toLocaleString() || "-"
-                }</span></div>
-                <div><span class="label" data-i18n="vinCheck.serviceCard.serviceCenter">${serviceCenterLabel}</span> <span class="value">${
-                  record.serviceCenter?.name || "-"
-                }</span></div>
+                } км</span></div>
+                <div><span class="label" data-i18n="vinCheck.serviceCard.address">Адрес:</span> <span class="value">${serviceAddress}</span></div>
               </div>
             `;
             sliderWrapper.appendChild(slide);
@@ -752,3 +785,19 @@ document.addEventListener("DOMContentLoaded", function () {
     return s.replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
   }
 });
+
+function isWarrantyActive(warranty) {
+  if (!warranty) return false;
+  
+  if (warranty.status === "NOT_PAID") return false;
+  
+  if (warranty.initialServiceDone === false) return false;
+  
+  if (warranty.isPaid === false) return false;
+  
+  if (!warranty.startTime) return false;
+  
+  if (warranty.endTime && new Date(warranty.endTime) <= new Date()) return false;
+  
+  return true;
+}

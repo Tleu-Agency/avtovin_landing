@@ -142,7 +142,9 @@
       "type": "Тип:",
       "description": "Описание:",
       "mileage": "Пробег:",
-      "serviceCenter": "СТО:"
+      "serviceCenter": "СТО:",
+      "date": "Дата:",
+      "address": "Адрес:"
     }
   },
   "check": {
