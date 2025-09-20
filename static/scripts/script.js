@@ -592,7 +592,8 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  const CENTERS_API = "static/data/service-centers.json";
+  const API_ENDPOINT = "https://api.accounting.avtovin.kz/service-centers";
+  const FALLBACK_JSON = "static/data/service-centers.json";
   const container = document.querySelector(".main__cities-in-items");
   if (!container) return;
 
@@ -608,18 +609,51 @@ document.addEventListener("DOMContentLoaded", function () {
   async function initServiceCenters() {
     try {
       container.innerHTML = "";
+      let raw = [];
+      let usesFallback = false;
 
-      const resp = await fetch(CENTERS_API, { headers: { "Content-Type": "application/json" } });
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const raw = await resp.json();
+      try {
+        // Пробуем загрузить с API
+        const resp = await fetch(API_ENDPOINT, { 
+          headers: { "Content-Type": "application/json" },
+          timeout: 5000 // таймаут 5 сек
+        });
+        
+        if (!resp.ok) throw new Error(`API error: HTTP ${resp.status}`);
+        raw = await resp.json();
+        console.log("Service centers loaded from API");
+      } catch (apiError) {
+        // Если API недоступен, используем локальный JSON
+        console.warn("Failed to fetch from API:", apiError);
+        usesFallback = true;
+        
+        const fallbackResp = await fetch(FALLBACK_JSON);
+        if (!fallbackResp.ok) throw new Error(`Fallback error: HTTP ${fallbackResp.status}`);
+        raw = await fallbackResp.json();
+        console.log("Service centers loaded from fallback JSON");
+      }
 
-      const items = (Array.isArray(raw) ? raw : []).map((x) => ({
-        address: (x.address || "").trim(),
-        socialLink: (x.socialLink || "").trim(),
-        type: String(x.type || "").trim(),   // HYBRID | OIL_CHANGE | CAR_SERVICE
-        city: (x.city || "Прочее").trim(),
-      })).filter(i => i.address && i.city && TYPE_MAP[i.type]);
+      const items = (Array.isArray(raw) ? raw : [])
+        .filter(x => x.isCooperate === true)
+        .map((x) => ({
+          address: (x.address || "").trim(),
+          socialLink: (x.socialLink || "").trim(),
+          type: String(x.type || "").trim(),
+          city: (x.city || "Прочее").trim(),
+        }))
+        .filter(i => i.address && i.city && TYPE_MAP[i.type]);
 
+      // Если данные все равно пусты, сообщаем об ошибке
+      if (items.length === 0) {
+        container.innerHTML = `<div class="error-message">
+          ${usesFallback ? 
+            "Не удалось загрузить список сервисных центров ни из API, ни из резервной копии." : 
+            "Список сервисных центров пуст."}
+        </div>`;
+        return;
+      }
+
+      // Группировка по городу и типу
       const grouped = {};
       for (const i of items) {
         if (!grouped[i.city]) grouped[i.city] = {};
@@ -627,6 +661,7 @@ document.addEventListener("DOMContentLoaded", function () {
         grouped[i.city][i.type].push(i);
       }
 
+      // Сортировка городов: сначала приоритетные, затем по алфавиту (ru)
       const PINNED_ORDER = { "астана": 0, "алматы": 1, "алмата": 1, "шымкент": 2 };
       const cities = Object.keys(grouped).sort((a, b) => {
         const al = a.toLowerCase();
@@ -641,11 +676,24 @@ document.addEventListener("DOMContentLoaded", function () {
       for (const city of cities) {
         container.appendChild(buildCityItem(city, grouped[city]));
       }
+      
+      // Если использовалась резервная копия, добавляем предупреждение
+      if (usesFallback) {
+        const notice = document.createElement("div");
+        notice.className = "fallback-notice";
+        notice.style.cssText = "color: #d9534f; font-size: 12px; margin-top: 15px; text-align: center;";
+        notice.textContent = "Данные загружены из локальной копии. Актуальная информация может отличаться.";
+        container.parentNode.insertBefore(notice, container.nextSibling);
+      }
     } catch (e) {
       console.error("Не удалось загрузить автосервисы:", e);
+      container.innerHTML = `<div class="error-message">
+        Ошибка при загрузке сервисных центров: ${e.message}
+      </div>`;
     }
   }
 
+  // Остальные функции без изменений
   function buildCityItem(city, groups) {
     const item = document.createElement("div");
     item.className = "main__cities-in-item";
@@ -674,10 +722,12 @@ document.addEventListener("DOMContentLoaded", function () {
       arr.forEach(({ address, socialLink }) => {
         const p = document.createElement("p");
         let htmlAddress = address;
-        const noteMatch = /\(Звонить по предварительной записи [^)]+\)/;
-        if (noteMatch.test(address)) {
-          htmlAddress = address.replace(noteMatch, (m) => `<span class="service-note">${m}</span>`);
+        
+        const bracketsRegex = /(\([^)]+\))/g;
+        if (bracketsRegex.test(address)) {
+          htmlAddress = address.replace(bracketsRegex, (m) => `<span class="service-note">${m}</span>`);
         }
+        
         if (socialLink) {
           const a = document.createElement("a");
           a.href = socialLink;
