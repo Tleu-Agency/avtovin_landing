@@ -643,28 +643,12 @@ document.addEventListener("DOMContentLoaded", function () {
     try {
       container.innerHTML = "";
       let raw = [];
-      let usesFallback = false;
 
-      try {
-        // Пробуем загрузить с API
-        const resp = await fetch(API_ENDPOINT, { 
-          headers: { "Content-Type": "application/json" },
-          timeout: 5000 // таймаут 5 сек
-        });
-        
-        if (!resp.ok) throw new Error(`API error: HTTP ${resp.status}`);
-        raw = await resp.json();
-        console.log("Service centers loaded from API");
-      } catch (apiError) {
-        // Если API недоступен, используем локальный JSON
-        console.warn("Failed to fetch from API:", apiError);
-        usesFallback = true;
-        
-        const fallbackResp = await fetch(FALLBACK_JSON);
-        if (!fallbackResp.ok) throw new Error(`Fallback error: HTTP ${fallbackResp.status}`);
-        raw = await fallbackResp.json();
-        console.log("Service centers loaded from fallback JSON");
-      }
+      // Загружаем из локального JSON файла
+      const resp = await fetch(FALLBACK_JSON);
+      if (!resp.ok) throw new Error(`Error loading local JSON: HTTP ${resp.status}`);
+      raw = await resp.json();
+      console.log("Service centers loaded from local JSON");
 
       const items = (Array.isArray(raw) ? raw : [])
         .filter(x => x.isCooperate === true)
@@ -679,9 +663,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // Если данные все равно пусты, сообщаем об ошибке
       if (items.length === 0) {
         container.innerHTML = `<div class="error-message">
-          ${usesFallback ? 
-            "Не удалось загрузить список сервисных центров ни из API, ни из резервной копии." : 
-            "Список сервисных центров пуст."}
+          Список сервисных центров пуст.
         </div>`;
         return;
       }
@@ -708,15 +690,6 @@ document.addEventListener("DOMContentLoaded", function () {
       // Рендер
       for (const city of cities) {
         container.appendChild(buildCityItem(city, grouped[city]));
-      }
-      
-      // Если использовалась резервная копия, добавляем предупреждение
-      if (usesFallback) {
-        const notice = document.createElement("div");
-        notice.className = "fallback-notice";
-        notice.style.cssText = "color: #d9534f; font-size: 12px; margin-top: 15px; text-align: center;";
-        notice.textContent = "Данные загружены из локальной копии. Актуальная информация может отличаться.";
-        container.parentNode.insertBefore(notice, container.nextSibling);
       }
     } catch (e) {
       console.error("Не удалось загрузить автосервисы:", e);
