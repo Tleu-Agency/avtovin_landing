@@ -1,17 +1,6 @@
 [
   {
     "id": "",
-    "name": "Хмельницкого, 66",
-    "address": "Хмельницкого, 66",
-    "contactPhone": "77474592760",
-    "socialLink": "",
-    "type": "CAR_SERVICE",
-    "city": "Алматы",
-    "isCooperate": true,
-    "password": "jnNd3nq9R2"
-  },
-  {
-    "id": "",
     "name": "Микрорайон-1, 89a",
     "address": "Микрорайон-1, 89a (Звонить по предварительной записи +7-747-392-2515)",
     "contactPhone": "77473922515",
@@ -44,11 +33,11 @@
     "password": "mF4qkF67Vn"
   },
   {
-    "id": "Avtoservis A3",
-    "name": "Сарын, 63/2",
-    "address": "Сарын, 63/2",
-    "contactPhone": "77052327760",
-    "socialLink": "https://2gis.kz/astana/search/%D0%A1%D0%B0%D1%80%D1%8B%D0%BD%2C%2063%2F2/firm/70000001040531752/71.521808%2C51.134917?m=71.443112%2C51.129753%2F10.72",
+    "id": "",
+    "name": "Момышулы, 28/6",
+    "address": "Момышулы, 28/6",
+    "contactPhone": "",
+    "socialLink": "",
     "type": "CAR_SERVICE",
     "city": "Астана",
     "isCooperate": true,
@@ -60,7 +49,7 @@
     "address": "Акыртас, 35",
     "contactPhone": "77779490666",
     "socialLink": "https://go.2gis.com/Q5Nla",
-    "type": "CAR_SERVICE",
+    "type": "HYBRID",
     "city": "Астана",
     "isCooperate": true,
     "password": "UXzwSjBCRB"
@@ -200,17 +189,6 @@
   },
   {
     "id": "",
-    "name": "BBS",
-    "address": "Ашимова, 229",
-    "contactPhone": "",
-    "socialLink": "https://go.2gis.com/0iUqL",
-    "type": "OIL_CHANGE",
-    "city": "Кокшетау",
-    "isCooperate": true,
-    "password": "WjD3eSkX5h"
-  },
-  {
-    "id": "",
     "name": "Чемпион",
     "address": "Сагдиева, 91",
     "contactPhone": "ChempionOil77776150503",
@@ -343,9 +321,9 @@
   },
   {
     "id": "",
-    "name": "Сулейманова, 72",
-    "address": "Сулейманова, 72",
-    "contactPhone": "Suleymanova72",
+    "name": "Жамбыла, 2/3",
+    "address": "Жамбыла, 2/3",
+    "contactPhone": "",
     "socialLink": "",
     "type": "CAR_SERVICE",
     "city": "Тараз",
@@ -398,9 +376,9 @@
   },
   {
     "id": "",
-    "name": "Тамерлановское шоссе, 20Б/3",
-    "address": "Тамерлановское шоссе, 20Б/3",
-    "contactPhone": "Tamerlanovskoe20B3Oil",
+    "name": "Мадели кожа, 181/1",
+    "address": "Мадели кожа, 181/1",
+    "contactPhone": "",
     "socialLink": "",
     "type": "OIL_CHANGE",
     "city": "Шымкент",
@@ -409,13 +387,24 @@
   },
   {
     "id": "",
-    "name": "Тамерлановское шоссе, 20Б/3",
-    "address": "Тамерлановское шоссе, 20Б/3",
-    "contactPhone": "Tamerlanovskoe20B3Service",
+    "name": "Мадели кожа, 181/1",
+    "address": "Мадели кожа, 181/1",
+    "contactPhone": "",
     "socialLink": "",
     "type": "CAR_SERVICE",
     "city": "Шымкент",
     "isCooperate": true,
     "password": "4Nqmu9gq8V"
+  },
+  {
+    "id": "",
+    "name": "Дайрашева, 1",
+    "address": "ул. Дайрашева, 1",
+    "contactPhone": "",
+    "socialLink": "",
+    "type": "CAR_SERVICE",
+    "city": "Жетысай",
+    "isCooperate": true,
+    "password": ""
   }
 ]
